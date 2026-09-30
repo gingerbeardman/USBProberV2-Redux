@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A31CE0000000000000000004 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A31CE0000000000000000003 /* Credits.rtf */; };
+		A31CE0000000000000000002 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = A31CE0000000000000000001 /* LICENSE */; };
 		3E0EA9FB050D22BA009D1D9C /* USBLoggerFilterWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E0EA950050D21FB009D1D9C /* USBLoggerFilterWindowController.h */; };
 		3E0EA9FC050D22BA009D1D9C /* USBLoggerFilterWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E0EA951050D21FB009D1D9C /* USBLoggerFilterWindowController.m */; };
 		3E0EA9FD050D2305009D1D9C /* clean.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 3E0EA9DC050D223D009D1D9C /* clean.tiff */; };
@@ -90,6 +92,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A31CE0000000000000000003 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
+		A31CE0000000000000000001 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -268,6 +272,8 @@
 			children = (
 				72DA3D2304C4A5D500DBD7EE /* USBProberIcon.icns */,
 				726236BD04B0E16C0026A607 /* USBVendors.txt */,
+				A31CE0000000000000000003 /* Credits.rtf */,
+				A31CE0000000000000000001 /* LICENSE */,
 				72DDD15C04A298650067E712 /* detail.tiff */,
 				72DDD15E04A298B20067E712 /* mark.tiff */,
 				72DDD16004A298B60067E712 /* clear.tiff */,
@@ -498,6 +504,8 @@
 				72DDD15F04A298B20067E712 /* mark.tiff in Resources */,
 				72DDD16104A298B60067E712 /* clear.tiff in Resources */,
 				726236BE04B0E16D0026A607 /* USBVendors.txt in Resources */,
+				A31CE0000000000000000004 /* Credits.rtf in Resources */,
+				A31CE0000000000000000002 /* LICENSE in Resources */,
 				72DA3D2404C4A5D500DBD7EE /* USBProberIcon.icns in Resources */,
 				3E7CBCE604F3DBFF008267FD /* USB Prober_Prefix.pch in Resources */,
 			);

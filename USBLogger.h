@@ -1,4 +1,7 @@
 /*
+ * Modified by Matt Sephton on 2026-09-30 for USB Prober Redux.
+ * macOS 15 user-space logging, capture formatting and lifecycle updates.
+ *
  *
  * @APPLE_LICENSE_HEADER_START@
  *
