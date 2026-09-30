@@ -9,6 +9,8 @@ Builds run on Apple Silicon and Intel Macs.
 - Monitor device connections and live USB system diagnostics.
 - Filter, mark, and save diagnostic captures.
 
+<img width="1554" height="1088" alt="73925" src="https://github.com/user-attachments/assets/9a913dd0-5600-420c-a352-0e2553c15cd9" />
+
 ## Install
 
 Download the signed, notarized DMG from
