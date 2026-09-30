@@ -88,6 +88,21 @@ The window keeps a bounded recent history (up to 10,000 entries and about 2 MiB
 of displayed text); **Dump output to file** records every received event for
 long sessions. macOS can drop messages when a system log source floods.
 
+## USB vendor names
+
+`USBVendors.txt` is generated from the [Linux USB ID database](http://www.linux-usb.org/usb.ids),
+maintained by Stephen J. Gowdy. Its header records the upstream version and date.
+To refresh the bundled vendor names:
+
+```sh
+curl --fail --location http://www.linux-usb.org/usb.ids -o /tmp/usb.ids
+python3 Scripts/update-usb-vendors.py /tmp/usb.ids
+```
+
+The converter selects vendor entries, converts hexadecimal IDs to decimal, and
+writes UTF-8 in the format the app reads. Products, interfaces, and classes are
+excluded. Rebuild the app to include the updated resource.
+
 ## Logger tests
 
 ```sh
