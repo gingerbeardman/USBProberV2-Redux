@@ -23,7 +23,6 @@
 
 #import "USBLoggerFilterWindowController.h"
 
-double timeStampFromLogLine(NSString * line);
 
 @implementation USBLoggerFilterWindowController
 
@@ -125,114 +124,9 @@ double timeStampFromLogLine(NSString * line);
 }
 
 - (void)itemDoubleClicked:(NSTableView *)sender {
-    NSString *lineText = [[sender dataSource] tableView:sender objectValueForTableColumn:[[sender tableColumns] objectAtIndex:0] row:[sender selectedRow]];
-    NSString *clickedLogString = [lineText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]; // strip the trailing newlines and spaces
-    double clickedTimeStamp = timeStampFromLogLine( clickedLogString );
-
-    if (clickedTimeStamp == -1) {
-        return;
-    }
-    
-    NSArray *displayedLines = [LoggerController displayedLogLines];
-    NSUInteger numberOfLines = [displayedLines count];
-    NSUInteger first = 0, middle = 0, last = numberOfLines-1;
-    double midTimeStamp = 0;
-    
-    while (first <= last) {
-        middle = (first + last) / 2;
-        midTimeStamp = timeStampFromLogLine([displayedLines objectAtIndex:middle]);
-        if (midTimeStamp == -1) {
-            middle++;
-            continue;
-        }
-        if (clickedTimeStamp > midTimeStamp) 
-            first = middle + 1;
-        else if (clickedTimeStamp < midTimeStamp) 
-            last = middle - 1;
-        else
-            break;
-    }
-
-    // [displayedLines objectAtIndex:middle] has a time stamp identical or closest to the timestamp
-    // of the clicked line. Now let's try to find the exact line, if we can
-
-    if (midTimeStamp != clickedTimeStamp) {
-        // timestamps dont match, so the clicked line was likely filtered out (not visible). Just scroll to the
-        // line we found ("middle"), which had the closest timestamp we cound find
-        [LoggerController scrollToVisibleLine:[displayedLines objectAtIndex:middle]];
-    } else {
-        // walk up and down looking for the exact matching line
-        BOOL found = NO;
-        NSUInteger lineNo;
-        NSString *thisLine = NULL;
-        NSCharacterSet *whitespaceAndNewlines  = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-
-        // walk down, starting with (the line we found)
-        lineNo = middle;
-        while (lineNo >= 0) {
-            thisLine = [[displayedLines objectAtIndex:lineNo] stringByTrimmingCharactersInSet:whitespaceAndNewlines];
-            if ( timeStampFromLogLine(thisLine) != midTimeStamp ) {
-                break;
-            } else if ([thisLine isEqualToString:clickedLogString]) {
-                found = YES;
-                break;
-            }
-            lineNo--;
-        }
-
-        // if still no exact match found, walk up, starting with (the line we found + 1)
-        if (!found) {
-            lineNo = middle+1;
-            while (lineNo <= numberOfLines-1) {
-                thisLine = [[displayedLines objectAtIndex:lineNo] stringByTrimmingCharactersInSet:whitespaceAndNewlines];
-                if ( timeStampFromLogLine(thisLine) != midTimeStamp ) {
-                    break;
-                } else if ([thisLine isEqualToString:clickedLogString]) {
-                    found = YES;
-                    break;
-                }
-                lineNo++;
-            }
-        }
-        
-        if (found) {
-            [LoggerController scrollToVisibleLine:thisLine];
-        }
-        else {
-            // we did not find the exact line, so just scroll to the line we found originally
-            // (which has the same time stamp as what we're looking for)
-            [LoggerController scrollToVisibleLine:[displayedLines objectAtIndex:middle]];
-        }
-    }
-}
-
-double timeStampFromLogLine(NSString * line) {
-    double timeStamp = -1;
-    int level = -1;
-
-#if 1
-    struct tm timePtr;
-    time_t  theTime;
-    char month[4];
-    int day, hour, min, sec, micro;
-    
-    sscanf((char *)[line cStringUsingEncoding:NSUTF8StringEncoding],"%s %d %d:%d:%d.%d  [%d]", month, &day, &hour, &min, &sec, &micro, &level);
-    
-    timePtr.tm_sec = sec;
-    timePtr.tm_min = min;
-    timePtr.tm_hour = hour;
-    timePtr.tm_mday = day;
-    timePtr.tm_mon = 8;         // Hard coding the month and the years since 1900, as it really does not matter in this case
-    timePtr.tm_year = 111;
-    
-    theTime = mktime(&timePtr);
-    
-    timeStamp = theTime + micro/1000.0;
-#else
-    sscanf((char *)[line cStringUsingEncoding:NSUTF8StringEncoding],"\t%f [%d]", &timeStamp, &level);
-#endif
-    
-    return timeStamp;
+    NSInteger row = [sender selectedRow];
+    if (row < 0 || (NSUInteger)row >= [_outputLogLines count]) return;
+    [LoggerController scrollToVisibleLine:[[_outputLogLines objectAtIndex:(NSUInteger)row] text]];
 }
 
 @end

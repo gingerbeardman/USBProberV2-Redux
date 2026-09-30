@@ -85,6 +85,12 @@ static int remainingFreshEntries = 0;
 
 @end
 
+@interface USBLoggerController ()
+- (void)resetDisplayGroup;
+- (void)appendDisplayOutput:(NSString *)text;
+- (NSString *)rawFilteredOutput;
+@end
+
 @implementation USBLoggerController
 
 - init {
@@ -103,6 +109,7 @@ static int remainingFreshEntries = 0;
         [_logger invalidate];
         [_logger release];
     }
+    [self resetDisplayGroup];
     [_outputLines release];
     [_currentFilterString release];
     [_outputBuffer release];
@@ -115,13 +122,17 @@ static int remainingFreshEntries = 0;
     [LoggerOutputTV setFont:[NSFont fontWithName:@"Monaco" size:10]];
     [FilterProgressIndicator setUsesThreadedAnimation:YES];
     
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"USBLoggerLoggingLevel"] intValue] != 0) {
-        [LoggingLevelPopUp selectItemAtIndex:[[[NSUserDefaults standardUserDefaults] objectForKey:@"USBLoggerLoggingLevel"] intValue]-1];
+    [LoggingLevelPopUp removeAllItems];
+    NSArray *titles = @[@"Errors & faults", @"Default", @"Info", @"Debug"];
+    NSArray *levels = @[@1, @3, @5, @7];
+    for (NSUInteger index = 0; index < [titles count]; index++) {
+        [LoggingLevelPopUp addItemWithTitle:[titles objectAtIndex:index]];
+        [[LoggingLevelPopUp lastItem] setTag:[[levels objectAtIndex:index] intValue]];
     }
-    
-    _klogKextisPresent = [self isKlogKextPresent];
-    _klogKextIsCorrectRevision = [self isKlogCorrectRevision];
-    
+    NSInteger savedLevel = [[NSUserDefaults standardUserDefaults] integerForKey:@"USBLoggerLoggingLevel"];
+    NSInteger level = savedLevel <= 0 ? 3 : (savedLevel <= 1 ? 1 : (savedLevel <= 3 ? 3 : (savedLevel <= 5 ? 5 : 7)));
+    [LoggingLevelPopUp selectItemWithTag:level];
+
     _refreshTimer = [[NSTimer scheduledTimerWithTimeInterval: (NSTimeInterval) LOGGER_REFRESH_INTERVAL
                                                       target:                         self
                                                     selector:                       @selector(handlePendingOutput:)
@@ -168,27 +179,26 @@ static int remainingFreshEntries = 0;
 - (IBAction)ChangeLoggingLevel:(id)sender
 {
     if (_logger != nil) {
-        [_logger setDebuggerOptions:-1 setLevel:true level:[[sender selectedItem] tag] setType:false type:0];
+        [_logger setLevel:(int)[[sender selectedItem] tag]];
     }
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:[[sender selectedItem] tag]] forKey:@"USBLoggerLoggingLevel"];
 }
 
 - (IBAction)ClearOutput:(id)sender
 {
+    [_bufferLock lock];
     [_outputLock lock];
     [_outputLines removeAllObjects];
+    [_outputBuffer setString:@""];
     [LoggerOutputTV setString:@""];
+    [self resetDisplayGroup];
     [_outputLock unlock];
+    [_bufferLock unlock];
 }
 
 - (IBAction)MarkOutput:(id)sender
 {
-    NSCalendarDate *currentDate;
-    
-    currentDate = [NSCalendarDate date];
-    [currentDate setCalendarFormat:@"%b %d %H:%M:%S"];
-
-    [self appendOutput:[NSString stringWithFormat:@"\n\t\t**** %@ ****\n\n",currentDate] atLevel:[NSNumber numberWithInt:0]];
+    [self appendOutput:[NSString stringWithFormat:@"%@ [Session] **** Mark ****\n", USBLogTimestamp()] atLevel:@0];
     
 }
 
@@ -217,7 +227,7 @@ static int remainingFreshEntries = 0;
 {
     NSSavePanel *sp = [NSSavePanel savePanel];
     [sp setAllowedFileTypes:[NSArray arrayWithObjects:@"txt", nil]];
-    [sp setDirectoryURL:[NSURL URLWithString:NSHomeDirectory()]];
+    [sp setDirectoryURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
     [sp setNameFieldStringValue:@"USB Log"];
     [sp setExtensionHidden:NO];
     [sp beginSheetModalForWindow:[NSApp mainWindow] completionHandler:^(NSInteger returnCode){
@@ -228,7 +238,7 @@ static int remainingFreshEntries = 0;
             
             [_outputLock lock];
             
-            finalString = [LoggerOutputTV string];
+            finalString = [self rawFilteredOutput];
                 
             if (![finalString writeToURL:[sp URL] atomically:YES encoding:NSUTF8StringEncoding error:NULL])
             {
@@ -241,50 +251,14 @@ static int remainingFreshEntries = 0;
 
 - (IBAction)Start:(id)sender
 {
-    if (!_klogKextisPresent) {
-        int result = NSRunAlertPanel (@"Missing Kernel Extension", @"The required kernel extension \"KLog.kext\" is not installed. Would you like to install it now?", @"Install", @"Cancel", nil);
-        if (result == NSAlertDefaultReturn) {
-            //try to install
-            if ([self installKLogKext] != YES) {
-                // error occured while installing, so return
-                return;
-            } else {
-				_klogKextisPresent = YES;
-				_klogKextIsCorrectRevision = YES;
-			}
-        } else {
-            // user does not want to install KLog.kext, so return
-            return;
-        }
-    } else if ( !_klogKextIsCorrectRevision )
-	{
-        int result = NSRunAlertPanel (@"Wrong revision for Kernel Extension", @"The required kernel extension \"KLog.kext\" is not the right revision. Would you like to upgrade it now?", @"Upgrade", @"Cancel", nil);
-        if (result == NSAlertFirstButtonReturn) {
-            //try to install
-            if ([self removeAndinstallKLogKext] != YES) {
-                // error occured while installing, so return
-                return;
-            } else 
-			{
-				NSRunAlertPanel (@"Need to Restart", @"The required kernel extension \"KLog.kext\" was installed.  Please quit and restart.", @"OK", nil, nil);
-				_klogKextIsCorrectRevision = NO;
-				return;
-			}
-        } else {
-            // user does not want to install KLog.kext, so return
-            return;
-		}
-	}
-    
     if ([DumpCheckBox state] == NSControlStateValueOn)
     {
         NSSavePanel *sp;
-        NSCalendarDate *currentDate = [NSCalendarDate date];
         
         sp = [NSSavePanel savePanel];
         [sp setAllowedFileTypes:[NSArray arrayWithObjects:@"txt", nil]];
         
-        [sp setDirectoryURL:[NSURL URLWithString:NSHomeDirectory()]];
+        [sp setDirectoryURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
         [sp setNameFieldStringValue:@"USB Log"];
         [sp setExtensionHidden:NO];
         [sp beginSheetModalForWindow:[NSApp mainWindow] completionHandler:^(NSInteger returnCode){
@@ -295,10 +269,9 @@ static int remainingFreshEntries = 0;
         
                 _dumpingFile = fopen ([theFileName cStringUsingEncoding:NSUTF8StringEncoding],"w");
         if (_dumpingFile == NULL) {
-                    [self appendOutput:[NSString stringWithFormat:@"%@: Error - unable to open the file %@\n\n",currentDate,theFileName] atLevel:[NSNumber numberWithInt:0]];
+                    [self appendOutput:[NSString stringWithFormat:@"%@ [Session] Error: unable to open capture file %@\n",USBLogTimestamp(),theFileName] atLevel:[NSNumber numberWithInt:0]];
         } else {
-            [currentDate setCalendarFormat:@"%b %d %H:%M:%S"];
-                    [self appendOutput:[NSString stringWithFormat:@"%@: Saving output to file %@\n\n",currentDate,theFileName] atLevel:[NSNumber numberWithInt:0]];
+                    [self appendOutput:[NSString stringWithFormat:@"%@ [Session] Capture file: %@\n",USBLogTimestamp(),theFileName] atLevel:[NSNumber numberWithInt:0]];
                 }
                 [self actuallyStartLogging];
             }
@@ -313,10 +286,14 @@ static int remainingFreshEntries = 0;
 - (void) actuallyStartLogging
 {
     if (_logger == nil) {
-        _logger = [[USBLogger alloc] initWithListener:self level:[[LoggingLevelPopUp selectedItem] tag]];
+        _logger = [[USBLogger alloc] initWithListener:self level:(int)[[LoggingLevelPopUp selectedItem] tag]];
         
     }
-    [_logger beginLogging];
+    if (![_logger beginLogging]) {
+        [self appendOutput:@"Unable to start USB logging.\n" atLevel:@0];
+        [self Stop:nil];
+        return;
+    }
     
     [DumpCheckBox setEnabled:NO];
     [StartStopButton setAction:@selector(Stop:)];
@@ -325,17 +302,17 @@ static int remainingFreshEntries = 0;
 
 - (IBAction)Stop:(id)sender
 {
-    if (_dumpingFile != NULL) {
-        fclose(_dumpingFile);
-        _dumpingFile = NULL;
-    }
-    
+    // Record Stop before closing the capture file.
     if (_logger != nil) {
         [_logger invalidate];
         [_logger release];
         _logger = nil;
     }
-    
+    if (_dumpingFile != NULL) {
+        fclose(_dumpingFile);
+        _dumpingFile = NULL;
+    }
+
     [StartStopButton setAction:@selector(Start:)];
     [StartStopButton setTitle:@"Start"];
     [DumpCheckBox setEnabled:YES];
@@ -346,198 +323,77 @@ static int remainingFreshEntries = 0;
 }
 
 - (IBAction)FilterOutput:(id)sender {
-    NSRange endMarker;
     NSScroller *scroller = [[LoggerOutputTV enclosingScrollView] verticalScroller];
     BOOL isScrolledToEnd = (![scroller isEnabled] || [scroller floatValue] == 1);
-    
-    NSEnumerator *lineEnumerator = [_outputLines objectEnumerator];
-    LoggerEntry *thisEntry;
-    NSString *text;
-    NSMutableString *finalOutput = [[NSMutableString alloc] init];
-    
     [_currentFilterString release];
-    if (![[sender stringValue] isEqualToString:@""]) {
-        _currentFilterString = [[sender stringValue] retain];
-    } else {
-        _currentFilterString = nil;
-    }
-    
+    _currentFilterString = [[sender stringValue] length] ? [[sender stringValue] copy] : nil;
+    [_bufferLock lock];
     [_outputLock lock];
-
-    [LoggerOutputTV setString:@""];
-    
-    //endMarker = NSMakeRange([[LoggerOutputTV string] length], 0);
-    
     [FilterProgressIndicator startAnimation:self];
-    while (thisEntry = [lineEnumerator nextObject]) {
-        text = [thisEntry text];
-        if (_currentFilterString == nil || [text rangeOfString:_currentFilterString options:NSCaseInsensitiveSearch].location != NSNotFound) {
-            [finalOutput appendString:text];
-            //[LoggerOutputTV replaceCharactersInRange:endMarker withString:text];
-            //endMarker.location += [text length];
-        }
-    }
-
-    [LoggerOutputTV replaceCharactersInRange:NSMakeRange(0, [[LoggerOutputTV string] length]) withString:finalOutput];
+    [LoggerOutputTV setString:@""];
+    [self resetDisplayGroup];
+    [self appendDisplayOutput:[self rawFilteredOutput]];
+    [_outputBuffer setString:@""];
     [FilterProgressIndicator stopAnimation:self];
-    
     if (isScrolledToEnd) {
-        endMarker = NSMakeRange([[LoggerOutputTV string] length], 0);
-        [LoggerOutputTV scrollRangeToVisible:endMarker];
+        [LoggerOutputTV scrollRangeToVisible:NSMakeRange([[LoggerOutputTV string] length], 0)];
     }
-    [LoggerOutputTV setNeedsDisplay:YES];
     [_outputLock unlock];
-    [finalOutput release];
+    [_bufferLock unlock];
 }
 
-	- (BOOL)isKlogKextPresent {
-		return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/Extensions/KLog.kext"];
-	}
-	
-	- (BOOL)isKlogCorrectRevision {
-		NSBundle	* klogBundle = [NSBundle bundleWithPath:@"/Library/Extensions/KLog.kext"];
-		
-		if ( klogBundle == nil)
-			return NO;
-		
-		/*NSDictionary *plist = [klogBundle infoDictionary];
-		uint32_t version = [[plist valueForKey:@"CFBundleNumericVersion"] intValue];
-		if ( (version < 0x03600000) && (version != 0) )
-			return NO;
-		else*/
-			return YES;
-		}
-	
-	- (BOOL)installKLogKext {
-		NSString *              sourcePath = [[NSBundle mainBundle] pathForResource:@"KLog" ofType:@"kext"];
-		NSString *              destPath = [NSString pathWithComponents:[NSArray arrayWithObjects:@"/",@"Library",@"Extensions",@"KLog.kext",nil]];
-		NSString *              permRepairPath = [[NSBundle mainBundle] pathForResource:@"SetKLogPermissions" ofType:@"sh"];
-		
-		AuthorizationRights     myRights;
-		AuthorizationItem       myItems[1];
-		AuthorizationRef        authorizationRef;
-		OSStatus                err;
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:sourcePath] == NO) {
-			NSRunAlertPanel (@"Missing Source File", @"\"KLog.kext\" could not be installed because it is missing from the application bundle.", @"Okay", nil, nil);
-			return NO;
-		}
-		
-		myItems[0].name = kAuthorizationRightExecute;
-		myItems[0].valueLength = 0;
-		myItems[0].value = NULL;
-		myItems[0].flags = 0;
-		
-		myRights.count = sizeof(myItems) / sizeof(myItems[0]);
-		myRights.items = myItems;
-		
-		err = AuthorizationCreate (&myRights, kAuthorizationEmptyEnvironment, kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights, &authorizationRef);
-		
-		if (err == errAuthorizationSuccess) {
-			char *  cpArgs[4];
-			char *  shArgs[2];
-			char *  kextloadArgs[2];
-			int     status;
-			
-			cpArgs[0] = "-r";
-			cpArgs[1] = (char *)[sourcePath cStringUsingEncoding:NSUTF8StringEncoding];
-			cpArgs[2] = (char *)[destPath cStringUsingEncoding:NSUTF8StringEncoding];
-			cpArgs[3] = NULL;
-			
-			err = AuthorizationExecuteWithPrivileges(authorizationRef, "/bin/cp", 0, cpArgs, NULL);
-			if (err) return NO;
-			
-			shArgs[0] = (char *)[permRepairPath cStringUsingEncoding:NSUTF8StringEncoding];
-			shArgs[1] = NULL;
-			
-			err = AuthorizationExecuteWithPrivileges(authorizationRef, "/bin/sh", 0, shArgs, NULL);
-			if (err) return NO;
-			
-			kextloadArgs[0] = (char *)[destPath cStringUsingEncoding:NSUTF8StringEncoding];
-			kextloadArgs[1] = NULL;
-			
-			err = AuthorizationExecuteWithPrivileges(authorizationRef, "/sbin/kextload", 0, kextloadArgs, NULL);
-			if (err) return NO;
-			
-			while (wait(&status) != -1) {
-				// wait for forked process to terminate
-			}
-			
-			AuthorizationFree(authorizationRef, kAuthorizationFlagDestroyRights);
-			return YES;
-		} else {
-			return NO;
-		}
-	}
-	
-	- (BOOL)removeAndinstallKLogKext {
-		NSString *              sourcePath = [[NSBundle mainBundle] pathForResource:@"KLog" ofType:@"kext"];
-		NSString *              destPath = [NSString pathWithComponents:[NSArray arrayWithObjects:@"/",/*@"System",*/@"Library",@"Extensions",@"KLog.kext",nil]];
-		NSString *              permRepairPath = [[NSBundle mainBundle] pathForResource:@"SetKLogPermissions" ofType:@"sh"];
-		
-		AuthorizationRights     myRights;
-		AuthorizationItem       myItems[1];
-		AuthorizationRef        authorizationRef;
-		OSStatus                err;
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:sourcePath] == NO) {
-			NSRunAlertPanel (@"Missing Source File", @"\"KLog.kext\" could not be installed because it is missing from the application bundle.", @"Okay", nil, nil);
-			return NO;
-		}
-		
-		myItems[0].name = kAuthorizationRightExecute;
-		myItems[0].valueLength = 0;
-		myItems[0].value = NULL;
-		myItems[0].flags = 0;
-		
-		myRights.count = sizeof(myItems) / sizeof(myItems[0]);
-		myRights.items = myItems;
-		
-		err = AuthorizationCreate (&myRights, kAuthorizationEmptyEnvironment, kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights, &authorizationRef);
-		
-		if (err == errAuthorizationSuccess) {
-			char *  cpArgs[4];
-			char *  shArgs[2];
-			char *  kextloadArgs[2];
-			int     status;
-			
-			// Remove it
-			cpArgs[0] = (char *)[destPath cStringUsingEncoding:NSUTF8StringEncoding];
-			cpArgs[1] = "/private/tmp";
-			cpArgs[2] = NULL;
-			cpArgs[3] = NULL;
-			
-			err = AuthorizationExecuteWithPrivileges(authorizationRef, "/bin/mv", 0, cpArgs, NULL);
-			if (err) return NO;
-			
-			// Copy it
-			cpArgs[0] = "-r";
-			cpArgs[1] = (char *)[sourcePath cStringUsingEncoding:NSUTF8StringEncoding];
-			cpArgs[2] = (char *)[destPath cStringUsingEncoding:NSUTF8StringEncoding];
-			cpArgs[3] = NULL;
-			
-			err = AuthorizationExecuteWithPrivileges(authorizationRef, "/bin/cp", 0, cpArgs, NULL);
-			if (err) return NO;
-			
-			shArgs[0] = (char *)[permRepairPath cStringUsingEncoding:NSUTF8StringEncoding];
-			shArgs[1] = NULL;
-			
-			err = AuthorizationExecuteWithPrivileges(authorizationRef, "/bin/sh", 0, shArgs, NULL);
-			if (err) return NO;
-			
-			kextloadArgs[0] = (char *)[destPath cStringUsingEncoding:NSUTF8StringEncoding];
-			kextloadArgs[1] = NULL;
-			
-			while (wait(&status) != -1) {
-				// wait for forked process to terminate
-			}
-			
-			AuthorizationFree(authorizationRef, kAuthorizationFlagDestroyRights);
-			return YES;
-		} else {
-			return NO;
-		}
-	}
+- (NSString *)rawFilteredOutput {
+    NSMutableString *text = [NSMutableString string];
+    for (LoggerEntry *entry in _outputLines) {
+        if (!_currentFilterString || [[entry text] rangeOfString:_currentFilterString options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            [text appendString:[entry text]];
+        }
+    }
+    return text;
+}
+
+- (void)resetDisplayGroup {
+    [_displayGroupKey release]; _displayGroupKey = nil;
+    [_displayGroupFirstLine release]; _displayGroupFirstLine = nil;
+    _displayGroupCount = 0;
+    _displayGroupRange = NSMakeRange(0, 0);
+}
+
+- (void)appendDisplayOutput:(NSString *)text {
+    // Group only adjacent, identical system messages. Device/session records break a group.
+    for (NSString *line in [text componentsSeparatedByString:@"\n"]) {
+        if (![line length]) continue;
+        NSRange marker = [line rangeOfString:@" [System/"];
+        NSString *key = marker.location == NSNotFound ? nil : [line substringFromIndex:marker.location];
+        BOOL repeats = key && [key isEqualToString:_displayGroupKey]
+            && NSMaxRange(_displayGroupRange) == [[LoggerOutputTV string] length];
+        NSString *rendered;
+        if (repeats) {
+            _displayGroupCount++;
+            rendered = [NSString stringWithFormat:@"%@ [repeated %lu times; last %@]\n",
+                _displayGroupFirstLine, (unsigned long)_displayGroupCount, [line substringToIndex:marker.location]];
+        } else {
+            [self resetDisplayGroup];
+            _displayGroupKey = [key copy];
+            _displayGroupFirstLine = [line copy];
+            _displayGroupCount = 1;
+            _displayGroupRange = NSMakeRange([[LoggerOutputTV string] length], 0);
+            rendered = [line stringByAppendingString:@"\n"];
+        }
+        [LoggerOutputTV replaceCharactersInRange:_displayGroupRange withString:rendered];
+        _displayGroupRange.length = [rendered length];
+    }
+    if ([[LoggerOutputTV string] length] > 2 * 1024 * 1024) {
+        NSRange newline = [[LoggerOutputTV string] rangeOfString:@"\n" options:0
+            range:NSMakeRange(1024 * 1024, [[LoggerOutputTV string] length] - 1024 * 1024)];
+        if (newline.location != NSNotFound) {
+            NSUInteger removed = NSMaxRange(newline);
+            [LoggerOutputTV replaceCharactersInRange:NSMakeRange(0, removed) withString:@""];
+            if (_displayGroupRange.location >= removed) _displayGroupRange.location -= removed;
+            else [self resetDisplayGroup];
+        }
+    }
+}
 
 - (NSArray *)logEntries {
     return _outputLines;
@@ -548,8 +404,14 @@ static int remainingFreshEntries = 0;
 }
 
 - (void)scrollToVisibleLine:(NSString *)line {
-    NSRange textRange = [[LoggerOutputTV string] rangeOfString:line];
-    
+    NSString *needle = [line stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    NSRange textRange = [[LoggerOutputTV string] rangeOfString:needle];
+    if (textRange.location == NSNotFound) {
+        NSRange marker = [needle rangeOfString:@" [System/"];
+        if (marker.location != NSNotFound) {
+            textRange = [[LoggerOutputTV string] rangeOfString:[needle substringFromIndex:marker.location]];
+        }
+    }
     if (textRange.location != NSNotFound) {
         [LoggerOutputTV scrollRangeToVisible:textRange];
         [LoggerOutputTV setSelectedRange:textRange];
@@ -566,10 +428,10 @@ static int remainingFreshEntries = 0;
                 NSScroller *scroller = [[LoggerOutputTV enclosingScrollView] verticalScroller];
                 BOOL isScrolledToEnd = (![scroller isEnabled] || [scroller floatValue] == 1);
                 
-                [LoggerOutputTV replaceCharactersInRange:endMarker withString:_outputBuffer];
-                
+                [self appendDisplayOutput:_outputBuffer];
+
                 if (isScrolledToEnd) {
-                    endMarker.location += [_outputBuffer length];
+                    endMarker.location = [[LoggerOutputTV string] length];
                     [LoggerOutputTV scrollRangeToVisible:endMarker];
                 }
                 
@@ -588,12 +450,16 @@ static int remainingFreshEntries = 0;
 
     [_outputLock lock];
     [_outputLines addObject:entry];
+    // Keep long sessions bounded; dumping to disk still receives every record.
+    if ([_outputLines count] > 10000) {
+        [_outputLines removeObjectsInRange:NSMakeRange(0, 1000)];
+    }
     [_outputLock unlock];
     
     [entry release];
 
     if (_dumpingFile != NULL) {
-        fprintf(_dumpingFile, "@%s", [aString cStringUsingEncoding:NSUTF8StringEncoding]);
+        fprintf(_dumpingFile, "%s", [aString cStringUsingEncoding:NSUTF8StringEncoding]);
         fflush(_dumpingFile);
     }
     
@@ -608,10 +474,14 @@ static int remainingFreshEntries = 0;
     NSString *text = [entry text];
     [_outputLock lock];
     [_outputLines addObject:entry];
+    // Keep long sessions bounded; dumping to disk still receives every record.
+    if ([_outputLines count] > 10000) {
+        [_outputLines removeObjectsInRange:NSMakeRange(0, 1000)];
+    }
     [_outputLock unlock];
     
     if (_dumpingFile != NULL) {
-        fprintf(_dumpingFile, "@%s", [text cStringUsingEncoding:NSUTF8StringEncoding]);
+        fprintf(_dumpingFile, "%s", [text cStringUsingEncoding:NSUTF8StringEncoding]);
         fflush(_dumpingFile);
     }
     
@@ -623,10 +493,8 @@ static int remainingFreshEntries = 0;
 }
 
 - (void)usbLoggerTextAvailable:(NSString *)text forLevel:(int)level {
-    LoggerEntry *entry = [LoggerEntry cachedFreshEntry];
-    [entry setText:text level:level];
-    
-    [self performSelectorOnMainThread:@selector(appendLoggerEntry:) withObject:entry waitUntilDone:NO];
+    // The backend delivers on the main run loop; each queued entry owns its text.
+    [self appendOutput:text atLevel:[NSNumber numberWithInt:level]];
 }
 
 @end

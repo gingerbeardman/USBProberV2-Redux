@@ -23,9 +23,6 @@
 
 
 #import <Cocoa/Cocoa.h>
-#import <Security/Authorization.h>
-#import <Security/AuthorizationTags.h>
-#import <sys/wait.h>
 #import "USBLogger.h"
 
 #define LOGGER_REFRESH_INTERVAL 0.1
@@ -65,9 +62,11 @@
     
     USBLogger *         _logger;
     NSTimer *           _refreshTimer;
+    NSString *          _displayGroupKey;
+    NSString *          _displayGroupFirstLine;
+    NSUInteger          _displayGroupCount;
+    NSRange             _displayGroupRange;
     
-    BOOL                _klogKextisPresent;
-    BOOL                _klogKextIsCorrectRevision;
 }
 
 - (void)setupRecentSearchesMenu;
@@ -81,10 +80,6 @@
 - (IBAction)ToggleDumping:(id)sender;
 - (IBAction)FilterOutput:(id)sender;
 
-- (BOOL)isKlogKextPresent;
-- (BOOL)isKlogCorrectRevision;
-- (BOOL)installKLogKext;
-- (BOOL)removeAndinstallKLogKext;
 
 - (NSArray *)logEntries;
 - (NSArray *)displayedLogLines;

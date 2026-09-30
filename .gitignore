@@ -1,0 +1,4 @@
+/build/
+/USBTracer/build/
+**/xcuserdata/
+/dist/

@@ -1,0 +1,17 @@
+{
+  "actions": {
+    "build": {
+      "enabled": true,
+      "script": "xcodebuild \\\n  -project USBProber.xcodeproj \\\n  -scheme 'USB Prober' \\\n  -configuration Development \\\n  -destination 'platform=macOS' \\\n  -derivedDataPath build/macos15 \\\n  build"
+    },
+    "clean": {
+      "enabled": true,
+      "script": "xcodebuild \\\n  -project USBProber.xcodeproj \\\n  -scheme 'USB Prober' \\\n  -configuration Development \\\n  -destination 'platform=macOS' \\\n  -derivedDataPath build/macos15 \\\n  clean"
+    },
+    "run": {
+      "enabled": true,
+      "script": "xcodebuild \\\n  -project USBProber.xcodeproj \\\n  -scheme 'USB Prober' \\\n  -configuration Development \\\n  -destination 'platform=macOS' \\\n  -derivedDataPath build/macos15 \\\n  build \\\n&& open \"build/macos15/Build/Products/Development/USB Prober.app\""
+    }
+  },
+  "openLogOnRun": "fail"
+}

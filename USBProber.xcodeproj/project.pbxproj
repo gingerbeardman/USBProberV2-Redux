@@ -15,15 +15,7 @@
 		3E97B3D60622623200DE59F9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E97B3D50622623200DE59F9 /* CoreFoundation.framework */; };
 		3EB4E4DF1326E553000DD9C1 /* DecodeBOSDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EB4E4DD1326E553000DD9C1 /* DecodeBOSDescriptor.h */; };
 		3EB4E4E01326E553000DD9C1 /* DecodeBOSDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB4E4DE1326E553000DD9C1 /* DecodeBOSDescriptor.m */; };
-		3ED5D6760DD4A2CE00AD5562 /* KLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E0EA84B050D1F76009D1D9C /* KLog.h */; };
-		3ED5D6770DD4A2CE00AD5562 /* KLogClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E0EA84D050D1F76009D1D9C /* KLogClient.h */; };
-		3ED5D6790DD4A2CE00AD5562 /* KLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E0EA84A050D1F76009D1D9C /* KLog.cpp */; };
-		3ED5D67A0DD4A2CE00AD5562 /* KLogClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E0EA84C050D1F76009D1D9C /* KLogClient.cpp */; };
-		3ED5D67C0DD4A2CE00AD5562 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3E0EA84F050D1F76009D1D9C /* InfoPlist.strings */; };
-		3ED5D6B90DD4AA9100AD5562 /* KLog.kext in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3ED5D6840DD4A2CE00AD5562 /* KLog.kext */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		3ED5D6EF0DD4AC3A00AD5562 /* KLogInfoPlist.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3ED5D6EE0DD4AC3A00AD5562 /* KLogInfoPlist.pch */; };
 		7206B40D04C3392200856A2F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7206B40C04C3392200856A2F /* Security.framework */; };
-		7206B50B04C33BFD00856A2F /* SetKLogPermissions.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7206B50A04C33BFD00856A2F /* SetKLogPermissions.sh */; };
 		724C8B9B04B241770045B190 /* DecodeDeviceQualifierDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 724C8B9904B241770045B190 /* DecodeDeviceQualifierDescriptor.h */; };
 		724C8B9C04B241770045B190 /* DecodeDeviceQualifierDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 724C8B9A04B241770045B190 /* DecodeDeviceQualifierDescriptor.m */; };
 		7262369304B0CAD00026A607 /* BusProbeClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 7262369104B0CAD00026A607 /* BusProbeClass.h */; };
@@ -97,38 +89,11 @@
 		ABD2F34D25975B100059AF97 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABD2F34425975AFA0059AF97 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		3ED5D6AC0DD4A9D600AD5562 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3ED5D6730DD4A2CE00AD5562;
-			remoteInfo = KLog;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		3E0EA8D2050D2170009D1D9C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 7;
-			files = (
-				3ED5D6B90DD4AA9100AD5562 /* KLog.kext in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		3E0EA84A050D1F76009D1D9C /* KLog.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = KLog.cpp; path = KLog/KLog.cpp; sourceTree = "<group>"; };
-		3E0EA84B050D1F76009D1D9C /* KLog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KLog.h; path = KLog/KLog.h; sourceTree = "<group>"; };
-		3E0EA84C050D1F76009D1D9C /* KLogClient.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = KLogClient.cpp; path = KLog/KLogClient.cpp; sourceTree = "<group>"; };
-		3E0EA84D050D1F76009D1D9C /* KLogClient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KLogClient.h; path = KLog/KLogClient.h; sourceTree = "<group>"; };
 		3E0EA950050D21FB009D1D9C /* USBLoggerFilterWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = USBLoggerFilterWindowController.h; sourceTree = "<group>"; };
 		3E0EA951050D21FB009D1D9C /* USBLoggerFilterWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = USBLoggerFilterWindowController.m; sourceTree = "<group>"; };
 		3E0EA9DC050D223D009D1D9C /* clean.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = clean.tiff; sourceTree = "<group>"; };
@@ -137,11 +102,7 @@
 		3E97B3D50622623200DE59F9 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		3EB4E4DD1326E553000DD9C1 /* DecodeBOSDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecodeBOSDescriptor.h; sourceTree = "<group>"; };
 		3EB4E4DE1326E553000DD9C1 /* DecodeBOSDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecodeBOSDescriptor.m; sourceTree = "<group>"; };
-		3ED5D6840DD4A2CE00AD5562 /* KLog.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KLog.kext; sourceTree = BUILT_PRODUCTS_DIR; };
-		3ED5D6B30DD4AA2200AD5562 /* KLog.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = KLog.plist; path = KLog/KLog.plist; sourceTree = "<group>"; };
-		3ED5D6EE0DD4AC3A00AD5562 /* KLogInfoPlist.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KLogInfoPlist.pch; path = KLog/KLogInfoPlist.pch; sourceTree = "<group>"; };
 		7206B40C04C3392200856A2F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
-		7206B50A04C33BFD00856A2F /* SetKLogPermissions.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = SetKLogPermissions.sh; sourceTree = "<group>"; };
 		724C8B9904B241770045B190 /* DecodeDeviceQualifierDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecodeDeviceQualifierDescriptor.h; sourceTree = "<group>"; };
 		724C8B9A04B241770045B190 /* DecodeDeviceQualifierDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecodeDeviceQualifierDescriptor.m; sourceTree = "<group>"; };
 		7262369104B0CAD00026A607 /* BusProbeClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BusProbeClass.h; sourceTree = "<group>"; };
@@ -212,19 +173,11 @@
 		84281E63126783230039577F /* PortStatusGatherer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PortStatusGatherer.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* USB Prober.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "USB Prober.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB3BE8DA25973DDF00678575 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AB3BE8DB25973DDF00678575 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		ABD2F34525975AFA0059AF97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3ED5D67D0DD4A2CE00AD5562 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8D11072E0486CEB800E47090 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -285,7 +238,6 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* USB Prober.app */,
-				3ED5D6840DD4A2CE00AD5562 /* KLog.kext */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -297,7 +249,6 @@
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
-				3E146F8B050D1EE700DE0AA3 /* KLog */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = "USB Prober";
@@ -325,7 +276,6 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				ABD2F34425975AFA0059AF97 /* MainMenu.xib */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				7206B50A04C33BFD00856A2F /* SetKLogPermissions.sh */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -337,29 +287,6 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		3E0EA84E050D1F76009D1D9C /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				3E0EA84F050D1F76009D1D9C /* InfoPlist.strings */,
-			);
-			name = Resources;
-			path = KLog/Resources;
-			sourceTree = "<group>";
-		};
-		3E146F8B050D1EE700DE0AA3 /* KLog */ = {
-			isa = PBXGroup;
-			children = (
-				3ED5D6EE0DD4AC3A00AD5562 /* KLogInfoPlist.pch */,
-				3ED5D6B30DD4AA2200AD5562 /* KLog.plist */,
-				3E0EA84A050D1F76009D1D9C /* KLog.cpp */,
-				3E0EA84B050D1F76009D1D9C /* KLog.h */,
-				3E0EA84C050D1F76009D1D9C /* KLogClient.cpp */,
-				3E0EA84D050D1F76009D1D9C /* KLogClient.h */,
-				3E0EA84E050D1F76009D1D9C /* Resources */,
-			);
-			name = KLog;
 			sourceTree = "<group>";
 		};
 		7265848804A8E8760093A8FB /* USB Logger */ = {
@@ -464,16 +391,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		3ED5D6750DD4A2CE00AD5562 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3ED5D6760DD4A2CE00AD5562 /* KLog.h in Headers */,
-				3ED5D6770DD4A2CE00AD5562 /* KLogClient.h in Headers */,
-				3ED5D6EF0DD4AC3A00AD5562 /* KLogInfoPlist.pch in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8D1107270486CEB800E47090 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -516,26 +433,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		3ED5D6730DD4A2CE00AD5562 /* KLog */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3ED5D67F0DD4A2CE00AD5562 /* Build configuration list for PBXNativeTarget "KLog" */;
-			buildPhases = (
-				3ED5D6740DD4A2CE00AD5562 /* ShellScript */,
-				3ED5D6750DD4A2CE00AD5562 /* Headers */,
-				3ED5D6780DD4A2CE00AD5562 /* Sources */,
-				3ED5D67B0DD4A2CE00AD5562 /* Resources */,
-				3ED5D67D0DD4A2CE00AD5562 /* Frameworks */,
-				3ED5D67E0DD4A2CE00AD5562 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = KLog;
-			productName = KLog;
-			productReference = 3ED5D6840DD4A2CE00AD5562 /* KLog.kext */;
-			productType = "com.apple.product-type.kernel-extension.iokit";
-		};
 		8D1107260486CEB800E47090 /* USB Prober */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3E420D2A08E1B98300FD1873 /* Build configuration list for PBXNativeTarget "USB Prober" */;
@@ -544,12 +441,10 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				3E0EA8D2050D2170009D1D9C /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				3ED5D6AD0DD4A9D600AD5562 /* PBXTargetDependency */,
 			);
 			name = "USB Prober";
 			productInstallPath = "$(HOME)/Applications";
@@ -585,21 +480,12 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3ED5D6730DD4A2CE00AD5562 /* KLog */,
 				8D1107260486CEB800E47090 /* USB Prober */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3ED5D67B0DD4A2CE00AD5562 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3ED5D67C0DD4A2CE00AD5562 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8D1107290486CEB800E47090 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -612,7 +498,6 @@
 				72DDD15F04A298B20067E712 /* mark.tiff in Resources */,
 				72DDD16104A298B60067E712 /* clear.tiff in Resources */,
 				726236BE04B0E16D0026A607 /* USBVendors.txt in Resources */,
-				7206B50B04C33BFD00856A2F /* SetKLogPermissions.sh in Resources */,
 				72DA3D2404C4A5D500DBD7EE /* USBProberIcon.icns in Resources */,
 				3E7CBCE604F3DBFF008267FD /* USB Prober_Prefix.pch in Resources */,
 			);
@@ -620,45 +505,7 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3ED5D6740DD4A2CE00AD5562 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "script=\"${SYSTEM_DEVELOPER_DIR}/ProjectBuilder Extras/Kernel Extension Support/KEXTPreprocess\";\nif [ -x \"$script\" ]; then\n    . \"$script\"\nfi";
-		};
-		3ED5D67E0DD4A2CE00AD5562 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "script=\"${SYSTEM_DEVELOPER_DIR}/ProjectBuilder Extras/Kernel Extension Support/KEXTPostprocess\";\nif [ -x \"$script\" ]; then\n    . \"$script\"\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		3ED5D6780DD4A2CE00AD5562 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3ED5D6790DD4A2CE00AD5562 /* KLog.cpp in Sources */,
-				3ED5D67A0DD4A2CE00AD5562 /* KLogClient.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8D11072C0486CEB800E47090 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -702,27 +549,11 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		3ED5D6AD0DD4A9D600AD5562 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3ED5D6730DD4A2CE00AD5562 /* KLog */;
-			targetProxy = 3ED5D6AC0DD4A9D600AD5562 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				AB3BE8DB25973DDF00678575 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		3E0EA84F050D1F76009D1D9C /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AB3BE8DA25973DDF00678575 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -761,7 +592,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.apple.USBProber;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gingerbeardman.USBProber;
 				PRODUCT_NAME = "USB Prober";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -780,8 +611,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -797,7 +626,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.apple.USBProber;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gingerbeardman.USBProber;
 				PRODUCT_NAME = "USB Prober";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -829,7 +658,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.apple.USBProber;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gingerbeardman.USBProber;
 				PRODUCT_NAME = "USB Prober";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = (
@@ -873,9 +702,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
 			};
 			name = Development;
 		};
@@ -910,9 +741,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
 			};
 			name = Deployment;
 		};
@@ -947,128 +780,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = "x86_64 i386 ppc";
-			};
-			name = Default;
-		};
-		3ED5D6800DD4A2CE00AD5562 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_DEADCODE_DEADSTORES = NO;
-				CLANG_ANALYZER_DIVIDE_BY_ZERO = NO;
-				CLANG_ANALYZER_NULL_DEREFERENCE = NO;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = YZAQ856TTM;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = KLog/KLog.plist;
-				INFOPLIST_PREFIX_HEADER = KLog/KLogInfoPlist.pch;
-				INFOPLIST_PREPROCESS = YES;
-				INSTALL_GROUP2 = wheel;
-				INSTALL_MODE = "\"a-w, u+w, a+rX\"";
-				INSTALL_OWNER2 = root;
-				KERNEL_MODULE = YES;
-				LIBRARY_SEARCH_PATHS = "";
-				MODULE_IOKIT = YES;
-				MODULE_NAME = com.vampire.cat.iokit.KLog;
-				MODULE_VERSION = 1.0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vampire.cat.iokit.KLog;
-				PRODUCT_NAME = KLog;
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = kext;
-				ZERO_LINK = NO;
-			};
-			name = Development;
-		};
-		3ED5D6810DD4A2CE00AD5562 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = YZAQ856TTM;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = KLog/KLog.plist;
-				INFOPLIST_PREFIX_HEADER = KLog/KLogInfoPlist.pch;
-				INFOPLIST_PREPROCESS = YES;
-				INSTALL_GROUP2 = wheel;
-				INSTALL_MODE = "\"a-w, u+w, a+rX\"";
-				INSTALL_OWNER2 = root;
-				KERNEL_MODULE = YES;
-				LIBRARY_SEARCH_PATHS = "";
-				MODULE_IOKIT = YES;
-				MODULE_NAME = com.vampire.cat.iokit.KLog;
-				MODULE_VERSION = 1.0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vampire.cat.iokit.KLog;
-				PRODUCT_NAME = KLog;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = kext;
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		3ED5D6820DD4A2CE00AD5562 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				DEVELOPMENT_TEAM = YZAQ856TTM;
-				FRAMEWORK_SEARCH_PATHS = "";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = "";
-				INFOPLIST_FILE = KLog/KLog.plist;
-				INFOPLIST_PREFIX_HEADER = KLog/KLogInfoPlist.pch;
-				INFOPLIST_PREPROCESS = YES;
-				INSTALL_GROUP2 = wheel;
-				INSTALL_MODE = "\"a-w, u+w, a+rX\"";
-				INSTALL_OWNER2 = root;
-				KERNEL_MODULE = YES;
-				LIBRARY_SEARCH_PATHS = "";
-				MODULE_IOKIT = YES;
-				MODULE_NAME = com.vampire.cat.iokit.KLog;
-				MODULE_VERSION = 1.0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vampire.cat.iokit.KLog;
-				PRODUCT_NAME = KLog;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = kext;
+				ARCHS = "$(ARCHS_STANDARD)";
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = macosx;
 			};
 			name = Default;
 		};
@@ -1091,16 +807,6 @@
 				3E420D2F08E1B98300FD1873 /* Development */,
 				3E420D3008E1B98300FD1873 /* Deployment */,
 				3E420D3108E1B98300FD1873 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		3ED5D67F0DD4A2CE00AD5562 /* Build configuration list for PBXNativeTarget "KLog" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3ED5D6800DD4A2CE00AD5562 /* Development */,
-				3ED5D6810DD4A2CE00AD5562 /* Deployment */,
-				3ED5D6820DD4A2CE00AD5562 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

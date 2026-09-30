@@ -24,81 +24,32 @@
 
 
 #import <Cocoa/Cocoa.h>
-#import <Foundation/Foundation.h>
-#import <stdio.h>
-#import <stdlib.h>
-#import <unistd.h>
-#import <sys/time.h>
-
-#import <CoreServices/CoreServices.h>
-
 #import <IOKit/IOKitLib.h>
-#import <IOKit/usb/IOUSBLib.h>
-#import <IOKit/IODataQueueClient.h>
-#import <IOKit/IODataQueueShared.h>
-#import <mach/mach_port.h>
 
-// Index for user client methods (from IOUSBLog.h)
-enum
-{
-    kUSBControllerUserClientOpen = 0,
-    kUSBControllerUserClientClose,
-    kUSBControllerUserClientEnableLogger,
-    kUSBControllerUserClientSetDebuggingLevel,
-    kUSBControllerUserClientSetDebuggingType,
-    kUSBControllerUserClientGetDebuggingLevel,
-    kUSBControllerUserClientGetDebuggingType,
-    kNumUSBControllerMethods
-};
-
-// KLog Message defines
-//
-#define _T_STAMP     sizeof(struct timeval)
-#define _LEVEL         sizeof(UInt32)
-#define _TAG        sizeof(UInt32)
-#define _OFFSET     (_T_STAMP + _LEVEL + _TAG)
-#define _MSG        BUFSIZE - (_T_STAMP + _LEVEL + _TAG)
-
-#define BUFSIZE 1024     //entries
-#define ENTRYSIZE 1200     //bytes
-
-#define Q_ON    1
-#define Q_OFF    0
-
-// Info Debug Output Types (from the KLog user client)
-//
-typedef UInt32        KernelDebuggingOutputType;
-enum
-{
-    kKernelDebugOutputIOLogType        = 0x00000001,
-    kKernelDebugOutputKextLoggerType    = 0x00000002
-};
+NSString *USBLogTimestamp(void);
 
 @protocol USBLoggerListener <NSObject>
-
 - (void)usbLoggerTextAvailable:(NSString *)text forLevel:(int)level;
-
 @end
 
+// All lifecycle methods and listener callbacks run on the main thread.
 @interface USBLogger : NSObject {
-    id              _listener;
-    int             _loggingLevel;
-    BOOL            _isLogging;
-    mach_port_t     _gMasterPort;
-    io_connect_t    _gControllerUserClientPort;
-    io_connect_t    _gKLogUserClientPort;
-    mach_port_t     _gQPort;
-    IODataQueueMemory *    _gMyQueue;
+    id<USBLoggerListener> _listener; // The controller owns the logger.
+    int _loggingLevel;
+    BOOL _isLogging;
+    BOOL _initialDevices;
+    IONotificationPortRef _notificationPort;
+    io_iterator_t _addedIterator;
+    io_iterator_t _removedIterator;
+    NSTask *_logTask;
+    NSPipe *_outputPipe;
+    NSPipe *_errorPipe;
+    NSMutableData *_pendingOutput;
+    NSTimer *_readTimer;
 }
-
-- initWithListener:(id <USBLoggerListener>)listener level:(int)level;
-
-- (kern_return_t)OpenUSBControllerUserClient;
-- (kern_return_t)setDebuggerOptions:(int)shouldLogFlag setLevel:(bool)setLevel level:(UInt32)level setType:(bool)setType type:(UInt32)type;
-
-- (void)beginLogging;
+- (instancetype)initWithListener:(id<USBLoggerListener>)listener level:(int)level;
+- (BOOL)beginLogging;
 - (void)invalidate;
 - (void)setLevel:(int)level;
-
-- (kern_return_t)callUSBControllerUserClient:(io_connect_t)port methodIndex:(UInt32)methodIndex inParam:(UInt32)inParam;
+- (BOOL)isLogging;
 @end
