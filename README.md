@@ -1,4 +1,4 @@
-# USB Prober V2
+# USB Prober Redux
 
 USB device and IORegistry inspection for macOS 15 or later. The application
 builds as a universal binary for Apple Silicon (`arm64`) and Intel (`x86_64`).
